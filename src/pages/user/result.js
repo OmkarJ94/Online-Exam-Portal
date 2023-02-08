@@ -3,15 +3,18 @@ import { useRouter } from "next/router"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
-function result({ data }) {
+function Result({ data }) {
 
     const router = useRouter()
-    const [token, setToken] = useState()
+    const { token } = router.query
+
+
     useEffect(() => {
 
         const code = localStorage.getItem("token")
 
-        setToken(code)
+
+
         if (code === null || !(Array.isArray(data))) {
             toast.error('You Must be login', {
                 position: "top-right",
@@ -23,16 +26,15 @@ function result({ data }) {
                 progress: undefined,
                 theme: "light",
             });
+            localStorage.removeItem("token")
+            setTimeout(() => {
 
-
-            router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
-        }
-        else {
-            setToken(code)
-        }
-        return () => {
+                router.push("/login")
+            }, 500)
 
         }
+
+
     }, [router.query])
 
     return (
@@ -50,15 +52,17 @@ function result({ data }) {
                             </div>
                             :
                             Array.isArray(data) && data?.map((item, index) => {
-                                
+
                                 return (
-                                    <div className="p-4 lg:w-1/3">
+                                    <div className="p-4 lg:w-1/3" key={index}>
                                         <div className="h-full bg-gray-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
                                             {/* <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Subject : {data[index]?.exam[0].subject}</h2> */}
                                             <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Score : {item?.score} / 10</h2>
                                             <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Time Duration : 10 Minutes</h2>
                                             <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Taken time duration : {item.timetaken} Minutes</h2>
+                                            <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Start time : {item.start}</h2>
                                             <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Submission Time/Date : {item.submissiontime}</h2>
+                                            <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">No Of Question Solved : {item.exam.length}</h2>
 
                                             <Link href={`viewtest?index=${index}&token=${token}`} className="text-indigo-500 inline-flex items-center">View Test
                                                 <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -83,7 +87,10 @@ function result({ data }) {
 }
 export async function getServerSideProps(context) {
     const { token } = context.query
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getmarks`, {
+
+    let host = process.env.NODE_ENV === "development" ? "http" : "https"
+
+    const response = await fetch(`${host}://${context.req.headers.host}/api/getmarks`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -94,9 +101,10 @@ export async function getServerSideProps(context) {
     })
 
     const data = await response.json()
+
     return {
-        props: { data: data.results }, // will be passed to the page component as props
+        props: { data }, // will be passed to the page component as props
     }
 }
 
-export default result
+export default Result

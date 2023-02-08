@@ -13,7 +13,7 @@ export default function Home() {
 
   const fetchData = async (token) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getuser`, {
+      const response = await fetch("/api/getuser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export default function Home() {
         }),
       })
       const user = await response.json()
-
+      
       if (response.status === 200) {
 
         setUser(user)
@@ -32,7 +32,7 @@ export default function Home() {
       }
     }
     catch (e) {
-
+      
     }
   }
   useEffect(() => {

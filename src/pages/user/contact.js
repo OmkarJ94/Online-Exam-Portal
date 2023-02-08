@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function contact({ user }) {
+function Contact({ user }) {
+    
     const [message, setMessage] = useState("")
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -11,7 +12,7 @@ function contact({ user }) {
         e.preventDefault()
         setLoading(true)
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/savemessage`, {
+            const response = await fetch("/api/savemessage", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,7 +36,7 @@ function contact({ user }) {
                     theme: "light",
                 });
                 setMessage("")
-                router.push(`${process.env.NEXT_PUBLIC_HOST}`)
+                router.push("/")
             }
             else {
                 toast.error('Something Went Wrong...Please Try Again', {
@@ -79,9 +80,9 @@ function contact({ user }) {
                 progress: undefined,
                 theme: "light",
             });
-
+            localStorage.removeItem("token")
             setTimeout(() => {
-                router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
+                router.push(`/login`)
             }, 500)
 
         }
@@ -105,7 +106,7 @@ function contact({ user }) {
                     <div className="flex flex-wrap -m-2">
                         <div className="p-2 w-1/2">
                             <div className="relative">
-                                <label htmlFor="name" className="leading-7 text-sm text-gray-600">Email</label>
+                                <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
                                 <input type="text" id="name" name="name" value={user.name} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" disabled />
                             </div>
                         </div>
@@ -137,8 +138,10 @@ function contact({ user }) {
 
 export async function getServerSideProps(context) {
     const { token } = context.query
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getuser`, {
+    
+    let host = process.env.NODE_ENV === "development" ? "http" : "https"
+    
+    const response = await fetch(`${host}://${context.req.headers.host}/api/getuser`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -148,11 +151,13 @@ export async function getServerSideProps(context) {
         }),
     })
     const user = await response.json()
-
+    
 
     return {
-        props: { user }, // will be passed to the page component as props
+        props: {
+            user
+        }, // will be passed to the page component as props
     }
 }
 
-export default contact
+export default Contact

@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-function test({ subjectCode }) {
+function Test() {
 
     const router = useRouter()
     const [data, setdata] = useState({
@@ -15,10 +15,10 @@ function test({ subjectCode }) {
         difficulty: "Easy"
     })
     const [loading, setLoading] = useState(false)
-    const [code, setCode] = useState({ code: subjectCode.code, expireIn: 0 })
+    const [code, setCode] = useState({ code: 0, expireIn: 0 })
     const sendEmail = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/sendemail`, {
+            const response = await fetch("/api/sendemail", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -29,6 +29,7 @@ function test({ subjectCode }) {
             })
             if (response.status === 200) {
                 const temp = await response.json()
+                
                 setCode({ code: temp.code, expireIn: temp.expireIn - new Date().getTime() })
                 toast.success('Code sent your email id', {
                     position: "top-right",
@@ -120,7 +121,7 @@ function test({ subjectCode }) {
 
 
         } catch (error) {
-            
+
             toast.error('Enter Valid Credentials', {
                 position: "top-right",
                 autoClose: 1000,
@@ -148,11 +149,14 @@ function test({ subjectCode }) {
                 progress: undefined,
                 theme: "light",
             });
-
+            localStorage.removeItem("token")
             setTimeout(() => {
-                router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
+                router.push("/login")
             }, 500)
 
+        }
+        else {
+            sendEmail()
         }
 
 
@@ -223,27 +227,27 @@ function test({ subjectCode }) {
     )
 }
 
-export async function getServerSideProps(context) {
-    const { token } = context.query
+// export async function getServerSideProps(context) {
+//     const { token } = context.query
 
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/sendemail`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            token
-        }),
-    })
+//     const response = await fetch("/api/sendemail", {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//             token
+//         }),
+//     })
 
-    let code;
-    code = await response.json()
+//     let code;
+//     code = await response.json()
 
-    
-    return {
-        props: { subjectCode: code }
-    }
-}
 
-export default test
+//     return {
+//         props: { subjectCode: code }
+//     }
+// }
+
+export default Test

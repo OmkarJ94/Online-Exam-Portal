@@ -1,14 +1,19 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react'
+const jwt = require('jsonwebtoken')
+import User from "../../../Models/User"
+var authenticate = require('../../pages/api/authentication')
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function profile({ user }) {
+function Profile({ user }) {
+    
     const router = useRouter()
+
     useEffect(() => {
         const token = localStorage.getItem("token")
-
+        
         if (token === null || token != router.query.token) {
             toast.error('You Must be login', {
                 position: "top-right",
@@ -20,17 +25,34 @@ function profile({ user }) {
                 progress: undefined,
                 theme: "light",
             });
-
+            localStorage.removeItem("token")
             setTimeout(() => {
-                router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
+                router.push("/login")
             }, 500)
 
         }
 
 
+
     }, [])
+
+    const send = () => {
+        toast.error('You Must be login', {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+        router.push("/login")
+    }
     return (
         <>
+
+
             <section className="text-gray-600 body-font">
                 <div className="container px-5 py-24 mx-auto">
                     <div className="text-center mb-20">
@@ -41,34 +63,34 @@ function profile({ user }) {
                         <div className="p-2 sm:w-1/2 w-full">
                             <div className="bg-gray-100 rounded flex p-4 h-full items-center">
 
-                                Name : {user.name}
+                                Name : {user?.name}
                             </div>
                         </div>
                         <div className="p-2 sm:w-1/2 w-full">
                             <div className="bg-gray-100 rounded flex p-4 h-full items-center">
 
-                                Email : {user.email}
+                                Email : {user?.email}
                             </div>
                         </div>
                         <div className="p-2 sm:w-1/2 w-full">
                             <div className="bg-gray-100 rounded flex p-4 h-full items-center">
-                                Passing Year : {user.passing_year}
+                                Passing Year : {user?.passing_year}
                             </div>
                         </div>
                         <div className="p-2 sm:w-1/2 w-full">
                             <div className="bg-gray-100 rounded flex p-4 h-full items-center">
-                                Branch : {user.branch}
+                                Branch : {user?.branch}
                             </div>
                         </div>
                         <div className="p-2 sm:w-1/2 w-full">
                             <div className="bg-gray-100 rounded flex p-4 h-full items-center">
-                                Mobile Number : {user.phone}
+                                Mobile Number : {user?.phone}
                             </div>
                         </div>
 
                         <div className="p-2 sm:w-1/2 w-full">
                             <div className="bg-gray-100 rounded flex p-4 h-full items-center">
-                                Semister : {user.semister}
+                                Semister : {user?.semister}
                             </div>
 
 
@@ -100,6 +122,7 @@ function profile({ user }) {
                     </div>
                 </div>
             </section>
+
         </>
     )
 }
@@ -107,8 +130,8 @@ function profile({ user }) {
 export async function getServerSideProps(context) {
     const { token } = context.query
 
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getuser`, {
+    let host = process.env.NODE_ENV === "development" ? "http" : "https"
+    const response = await fetch(`${host}://${context.req.headers.host}/api/getuser`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -119,16 +142,11 @@ export async function getServerSideProps(context) {
     })
     let user = "";
     if (response.status === 200) {
-
-
         user = await response.json()
     }
-
-
 
     return {
         props: { user }
     }
 }
-
-export default profile
+export default Profile

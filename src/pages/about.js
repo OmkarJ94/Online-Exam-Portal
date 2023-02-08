@@ -2,7 +2,7 @@
 import React from 'react'
 import data from "../Data/aboutData"
 
-function about() {
+function About() {
     return (
         <div>
             <section className="text-gray-600 body-font">
@@ -51,4 +51,4 @@ function about() {
     )
 }
 
-export default about
+export default About

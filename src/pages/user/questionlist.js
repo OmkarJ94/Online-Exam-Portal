@@ -4,9 +4,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCountdownTimer } from 'use-countdown-timer';
 
-function questionlist({ test }) {
+function Questionlist({ test }) {
     const { countdown, start, reset, pause, isRunning } = useCountdownTimer({
-        timer: 0.5 * 60 * 1000,
+        timer: 10 * 60 * 1000,
     });
     const router = useRouter()
     const [starttime, setStartTime] = useState()
@@ -16,7 +16,7 @@ function questionlist({ test }) {
     const [exam, setExam] = useState([])
 
     useEffect(() => {
-        setStartTime(new Date().toLocaleString())
+        setStartTime(new Date().getTime())
         start()
         const code = JSON.parse(localStorage.getItem("actualcode"))
         const token = localStorage.getItem("token")
@@ -34,25 +34,25 @@ function questionlist({ test }) {
             localStorage.removeItem("token")
             setTimeout(() => {
 
-                router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
+                router.push("/login")
             }, 500)
             localStorage.removeItem("actualcode")
         }
     }, [])
     const handleChange = (answer, question) => {
-        
+
         if (isRunning) {
             var isPresent = false
             if (question.correct_answers[answer + "_correct"] === "true") {
                 setScore(score + 1)
             }
             for (let ele of exam) {
-                
+
                 if (ele.id === question.id) {
                     isPresent = true
                 }
             }
-            
+
             if (!isPresent) {
                 setExam([...exam, {
                     id: question.id,
@@ -64,7 +64,7 @@ function questionlist({ test }) {
                     subject: question.category
                 }])
             }
-            
+
 
         }
         else {
@@ -78,6 +78,7 @@ function questionlist({ test }) {
                 progress: undefined,
                 theme: "light",
             });
+            router.push()
         }
     }
 
@@ -88,7 +89,7 @@ function questionlist({ test }) {
 
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/savemarks`, {
+            const response = await fetch("/api/savemarks", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -113,7 +114,7 @@ function questionlist({ test }) {
                 localStorage.removeItem("actualcode")
 
                 setTimeout(() => {
-                    router.push(`${process.env.NEXT_PUBLIC_HOST}`)
+                    router.push("/")
                 }, 500)
             }
             else {
@@ -219,4 +220,4 @@ export async function getServerSideProps(context) {
         props: { test: questions }, // will be passed to the page component as props
     }
 }
-export default questionlist
+export default Questionlist

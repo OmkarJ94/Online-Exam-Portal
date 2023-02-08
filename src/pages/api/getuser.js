@@ -11,6 +11,7 @@ export default async function handler(req, res) {
         const { token } = req.body
 
         const status = await authenticate(token)
+        
         if (status === "User Not Found") {
             res.status(500).json({ "status": "error" })
             return
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
         }
     }
     catch (e) {
-
+        
         res.status(500).json({ "status": "error" })
     }
 }

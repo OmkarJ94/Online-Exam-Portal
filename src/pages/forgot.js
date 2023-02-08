@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function login() {
+function Forgot() {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
@@ -31,7 +31,7 @@ function login() {
         }
         try {
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/sendotp`, {
+            const response = await fetch("/api/sendotp", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -53,7 +53,7 @@ function login() {
                 });
                 setTimeout(() => {
 
-                    router.push(`${process.env.NEXT_PUBLIC_HOST}enterpasswords?email=${email}`)
+                    router.push(`/enterpasswords?email=${email}`)
                 }, 500)
 
 
@@ -127,4 +127,4 @@ function login() {
     )
 }
 
-export default login
+export default Forgot

@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/router"
 
-function viewtest({ test }) {
+function Viewtest({ test }) {
     const router = useRouter()
     useEffect(() => {
         const token = localStorage.getItem("token")
@@ -21,7 +21,7 @@ function viewtest({ test }) {
             });
 
             setTimeout(() => {
-                router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
+                router.push("/login")
             }, 500)
 
         }
@@ -30,7 +30,7 @@ function viewtest({ test }) {
     }, [])
     return (
         <div>
-            {(test.exam)?.length > 0 && Object.keys(test.exam)?.map((question) => {
+            {(test.exam)?.length > 0 ? Object.keys(test.exam)?.map((question) => {
                 return (
                     <section className="text-gray-600 body-font" key={test.exam[question].id}>
                         <div className="container px-5 py-24 mx-auto">
@@ -95,7 +95,13 @@ function viewtest({ test }) {
                     </section>
                 )
             })
-
+                :
+                <>
+                    <h1 className="text-center mt-52 text-4xl">You Have Not Solved Any Question</h1>
+                    <div className="p-2 w-full">
+                        <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" onClick={() => { router.push(`/user/result?token=${router.query.token}`) }}>Go Back</button>
+                    </div>
+                </>
             }
 
         </div>
@@ -104,7 +110,10 @@ function viewtest({ test }) {
 
 export async function getServerSideProps(context) {
     const { index, token } = context.query
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getmarks`, {
+
+    let host = process.env.NODE_ENV === "development" ? "http" : "https"
+
+    const response = await fetch(`${host}://${context.req.headers.host}/api/getmarks`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -114,9 +123,10 @@ export async function getServerSideProps(context) {
         }),
     })
     const data = await response.json()
+    
     return {
-        props: { test: data.results[index] }, // will be passed to the page component as props
+        props: { test: data[index] }, // will be passed to the page component as props
     }
 }
 
-export default viewtest
+export default Viewtest

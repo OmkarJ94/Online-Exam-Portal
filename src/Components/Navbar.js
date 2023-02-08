@@ -19,7 +19,7 @@ function Navbar() {
         
         try {
             localStorage.removeItem("token")
-            const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/logout`, {
+            const response = await fetch("/api/logout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -41,7 +41,7 @@ function Navbar() {
                 });
                 setTimeout(() => {
 
-                    router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
+                    router.push("/login")
                 }, 500)
             }
         }
@@ -57,7 +57,7 @@ function Navbar() {
                 <ToastContainer />
                 <header className="text-gray-600 body-font">
                     <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-                        <Link className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0" href="/">
+                        <Link className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0" href="">
                             <span className="ml-3 text-xl">Online Exam Portal</span>
                         </Link>
                         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
@@ -80,7 +80,7 @@ function Navbar() {
                 <ToastContainer />
                 <header className="text-gray-600 body-font">
                     <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-                        <Link className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0" href="/">
+                        <Link className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0" href="">
 
                             <span className="ml-3 text-xl">Online Exam Portal</span>
                         </Link>

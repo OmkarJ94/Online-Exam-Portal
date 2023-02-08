@@ -32,7 +32,6 @@ const mailer = (mail, body) => {
 
                 return false;
             } else {
-
                 return true
             }
         })

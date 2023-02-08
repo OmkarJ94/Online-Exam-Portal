@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function enterpasswords() {
+function Enterpasswords() {
     const router = useRouter()
 
     const [data, setdata] = useState({
@@ -40,7 +40,7 @@ function enterpasswords() {
                 return;
             }
 
-            let result = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updatepassword`, {
+            let result = await fetch("/api/updatepassword", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -159,4 +159,4 @@ function enterpasswords() {
     )
 }
 
-export default enterpasswords
+export default Enterpasswords

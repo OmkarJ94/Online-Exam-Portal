@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function signup() {
+function Signup() {
     const router = useRouter()
     const [data, setdata] = useState({
         name: "",
@@ -36,7 +36,7 @@ function signup() {
         }
         try {
             setLoading(true)
-            const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
+            const response = await fetch("/api/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -58,7 +58,7 @@ function signup() {
                 });
                 setTimeout(() => {
 
-                    router.push(`${process.env.NEXT_PUBLIC_HOST}login`)
+                    router.push("/login")
                 }, 1000)
                 setLoading(false)
 
@@ -190,4 +190,4 @@ function signup() {
     )
 }
 
-export default signup
+export default Signup
