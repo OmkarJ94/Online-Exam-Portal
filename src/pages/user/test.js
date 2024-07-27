@@ -7,8 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 function Test() {
-
     const router = useRouter()
+    const {id}=router.query
     const [data, setdata] = useState({
         subject: "Linux",
         code: "",
@@ -24,7 +24,7 @@ function Test() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    token: router.query.token
+                    id:router.query.id
                 }),
             })
             if (response.status === 200) {
@@ -118,8 +118,6 @@ function Test() {
                     theme: "light",
                 });
             }
-
-
         } catch (error) {
 
             toast.error('Enter Valid Credentials', {
@@ -137,8 +135,7 @@ function Test() {
     }
     useEffect(() => {
         const token = localStorage.getItem("token")
-
-        if (token === null || token != router.query.token) {
+        if (token === null) {
             toast.error('You Must be login', {
                 position: "top-right",
                 autoClose: 1000,

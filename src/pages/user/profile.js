@@ -14,7 +14,7 @@ function Profile({ user }) {
     useEffect(() => {
         const token = localStorage.getItem("token")
         
-        if (token === null || token != router.query.token) {
+        if (token === null) {
             toast.error('You Must be login', {
                 position: "top-right",
                 autoClose: 1000,
@@ -29,11 +29,7 @@ function Profile({ user }) {
             setTimeout(() => {
                 router.push("/login")
             }, 500)
-
         }
-
-
-
     }, [])
 
     const send = () => {
@@ -51,8 +47,6 @@ function Profile({ user }) {
     }
     return (
         <>
-
-
             <section className="text-gray-600 body-font">
                 <div className="container px-5 py-24 mx-auto">
                     <div className="text-center mb-20">
@@ -92,13 +86,8 @@ function Profile({ user }) {
                             <div className="bg-gray-100 rounded flex p-4 h-full items-center">
                                 Semister : {user?.semister}
                             </div>
-
-
                         </div>
                     </div>
-
-
-
                 </div>
             </section>
             <section className="text-gray-600 body-font relative">
@@ -111,7 +100,7 @@ function Profile({ user }) {
                                     <button
                                         className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
                                         type="button"
-                                        onClick={() => router.push(`/user/edit?token=${router.query.token}`)}
+                                        onClick={() => router.push(`/user/edit?id=${user._id}`)}
                                     >
                                         Edit
                                     </button>
@@ -128,16 +117,16 @@ function Profile({ user }) {
 }
 
 export async function getServerSideProps(context) {
-    const { token } = context.query
+    const { id } = context.query
 
     let host = process.env.NODE_ENV === "development" ? "http" : "https"
-    const response = await fetch(`${host}://${context.req.headers.host}/api/getuser`, {
+    const response = await fetch(`${host}://${context.req.headers.host}/api/getuserbyid`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            token
+            id
         }),
     })
     let user = "";

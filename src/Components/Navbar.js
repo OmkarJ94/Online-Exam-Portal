@@ -5,18 +5,51 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function Navbar() {
     const router = useRouter()
-    const [token, setToken] = useState("")
+    const [userId, setUserId] = useState("")
+    const getUser = async (token) => {
+        try {
+            const response = await fetch("/api/getuserbytoken", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    token
+                }),
+            })
+            const user = await response.json()
+            if (response.status === 200) {
+                return user
+            }
+        }
+        catch (e) {
+
+        }
+    }
     useEffect(() => {
         const token = localStorage.getItem("token")
-        setToken(token)
-
         if (token) {
-            setToken(token)
+            const user = getUser(token)
+            .then((response)=>{
+                setUserId(response._id)
+            })
+            .catch((error) => {
+                toast.error("Something Went Wrong", {
+                    position: "top-right",
+                    autoClose: 1000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            })
         }
     }, [router.query])
 
     const handleLogOut = async () => {
-        
+
         try {
             localStorage.removeItem("token")
             const response = await fetch("/api/logout", {
@@ -49,9 +82,7 @@ function Navbar() {
 
         }
     }
-    if (token) {
-
-
+    if (userId != "") {
         return (
             <div>
                 <ToastContainer />
@@ -62,11 +93,11 @@ function Navbar() {
                         </Link>
                         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
 
-                            <Link className="mr-5 hover:text-gray-900" href={`/user/test?token=${token}`}>Check Test</Link>
-                            <Link className="mr-5 hover:text-gray-900" href={`/user/profile?token=${token}`}>View Profile</Link>
-                            <Link className="mr-5 hover:text-gray-900" href={`/user/result?token=${token}`}>View Result</Link>
+                            <Link className="mr-5 hover:text-gray-900" href={`/user/test?id=${userId}`}>Check Test</Link>
+                            <Link className="mr-5 hover:text-gray-900" href={`/user/profile?id=${userId}`}>View Profile</Link>
+                            <Link className="mr-5 hover:text-gray-900" href={`/user/result?id=${userId}`}>View Result</Link>
                             <Link className="mr-5 hover:text-gray-900" href="/about">About Us</Link>
-                            <Link className="mr-5 hover:text-gray-900" href={`/user/contact?token=${token}`}>Contact Us</Link>
+                            <Link className="mr-5 hover:text-gray-900" href={`/user/contact?id=${userId}`}>Contact Us</Link>
                         </nav>
                         <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg" onClick={handleLogOut}>Log Out</button>
                     </div>

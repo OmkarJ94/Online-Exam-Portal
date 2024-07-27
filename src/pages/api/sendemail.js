@@ -51,31 +51,31 @@ const mailer = async (email, code) => {
     })
 }
 export default async function handler(req, res) {
-
-    const { token } = req.body
-
-
     if (req.method === "POST") {
-        const { _id } = jwt.verify(token, process.env.KEY)
-        const user = await User.findById(_id)
+        try {
+            const { id } = req.body
+            const user = await User.findById(id)
+            if (!user) {
+                return res.status(500).json({ results: "Something Went Wrong" });
+            }
+            const code = Math.floor(Math.random() * 10000 + 1);
+            await Otp.remove({ email: user.email })
+            const expireIn = new Date().getTime() + 1000
+            let Code = new Otp({
+                email: user.email,
+                Otp: code,
+                expireIn
+            });
 
-        const code = Math.floor(Math.random() * 10000 + 1);
-        await Otp.remove({ email: user.email })
-        const expireIn = new Date().getTime() + 1000
-        let Code = new Otp({
-            email: user.email,
-            Otp: code,
-            expireIn
-        });
 
+            const response = await Code.save();
 
-        const response = await Code.save();
+            mailer(user.email, code)
+            res.status(200).json({ code, expireIn })
+        }
+        catch (error) {
+            res.status(500).json({ "status": "error" })
+        }
 
-        mailer(user.email, code)
-        res.status(200).json({ code, expireIn })
     }
-    else {
-        res.status(500).json({ "status": "error" })
-    }
-
 }

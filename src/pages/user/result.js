@@ -7,15 +7,9 @@ function Result({ data }) {
 
     const router = useRouter()
     const { token } = router.query
-
-
     useEffect(() => {
-
-        const code = localStorage.getItem("token")
-
-
-
-        if (code === null || !(Array.isArray(data))) {
+        const token = localStorage.getItem("token")
+        if (token === null || !(Array.isArray(data))) {
             toast.error('You Must be login', {
                 position: "top-right",
                 autoClose: 1000,
@@ -86,8 +80,7 @@ function Result({ data }) {
     )
 }
 export async function getServerSideProps(context) {
-    const { token } = context.query
-
+    const { id } = context.query
     let host = process.env.NODE_ENV === "development" ? "http" : "https"
 
     const response = await fetch(`${host}://${context.req.headers.host}/api/getmarks`, {
@@ -96,12 +89,11 @@ export async function getServerSideProps(context) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            token
+            id
         }),
     })
 
     const data = await response.json()
-
     return {
         props: { data }, // will be passed to the page component as props
     }

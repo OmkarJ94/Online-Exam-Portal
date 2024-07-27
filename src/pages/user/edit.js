@@ -20,7 +20,7 @@ function Edit({ user }) {
     useEffect(() => {
         const token = localStorage.getItem("token")
 
-        if (token === null || token != router.query.token) {
+        if (token === null) {
             toast.error('You Must be login', {
                 position: "top-right",
                 autoClose: 1000,
@@ -214,24 +214,23 @@ function Edit({ user }) {
 }
 
 export async function getServerSideProps(context) {
-    const { token } = context.query
-    if (!token) {
+    const { id } = context.query
+    if (!id) {
         return
     }
     let host = process.env.NODE_ENV === "development" ? "http" : "https"
-    const response = await fetch(`${host}://${context.req.headers.host}/api/getuser`, {
+    const response = await fetch(`${host}://${context.req.headers.host}/api/getuserbyid`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            token
+            id
         }),
     })
     const user = await response.json()
 
     if (response.status === 200) {
-
         const bytes = CryptoJS.AES.decrypt(user.password, process.env.KEY);
         var originalpassword = bytes.toString(CryptoJS.enc.Utf8);
         user.password = originalpassword
