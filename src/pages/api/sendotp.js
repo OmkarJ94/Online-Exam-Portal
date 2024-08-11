@@ -5,9 +5,7 @@ var jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 
 const mailer = (mail, body) => {
-
     try {
-
         let mailTransporter = nodemailer.createTransport({
             service: 'gmail',
             port: 587,
@@ -36,11 +34,8 @@ const mailer = (mail, body) => {
             }
         })
     } catch (error) {
-
-
     }
 }
-
 
 export default async function handler(req, res) {
     if (req.method === "POST") {
@@ -51,13 +46,12 @@ export default async function handler(req, res) {
                 return res.status(404).json({ error: "User Not Found" });
             }
             const code = Math.floor(Math.random() * 10000 + 1);
-            let body = ` We sending you this email in response to your request to reset your password on our Online Exam Portal
+            let body = `We sending you this email in response to your request to reset your password on our Online Exam Portal
             <br/><br/>
-            We recommend that you keep your password secure and not share it with anyone.If you feel your password has been compromised, you can change it by going to your My Account Page and chnage your password.
+            We recommend that you keep your password secure and not share it with anyone.If you feel your password has been compromised, you can change it by going to our portal.
             <br/><br/>
             <h1>Otp to change the password : <b>${code}</b></h1>
             <h3>This otp valid only for 5 minutes</h3>
-            
         `;
             const result = await User.findOne({ email: email });
 
@@ -69,16 +63,12 @@ export default async function handler(req, res) {
                 });
                 const response = await Code.save();
                 mailer(email, body);
-
-
                 res.status(200).json({ message: "OTP Send Your Mail Id" });
 
             } else {
                 res.status(404).json({ message: "User Not Found" });
             }
         } catch (error) {
-
-
             res.status(404).json({ message: "Something Went Wrong" });
         }
     } else {

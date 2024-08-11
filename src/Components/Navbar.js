@@ -51,6 +51,7 @@ function Navbar() {
     const handleLogOut = async () => {
 
         try {
+            const token=localStorage.getItem("token")
             localStorage.removeItem("token")
             const response = await fetch("/api/logout", {
                 method: "POST",
@@ -82,7 +83,7 @@ function Navbar() {
 
         }
     }
-    if (userId != "") {
+    if (userId !== "") {
         return (
             <div>
                 <ToastContainer />

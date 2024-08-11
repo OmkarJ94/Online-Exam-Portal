@@ -13,17 +13,16 @@ export default function Home() {
 
   const fetchData = async (token) => {
     try {
-      const response = await fetch("/api/getuser", {
+      const response = await fetch("/api/getuserbytoken", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          token
+            token
         }),
-      })
+    })
       const user = await response.json()
-      
       if (response.status === 200) {
 
         setUser(user)

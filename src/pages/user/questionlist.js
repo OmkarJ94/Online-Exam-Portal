@@ -3,18 +3,19 @@ import { useRouter } from "next/router"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCountdownTimer } from 'use-countdown-timer';
+import CountDown from '@/Components/CountDown';
 
 function Questionlist({ test }) {
-    const { countdown, start, reset, pause, isRunning } = useCountdownTimer({
-        timer: 10 * 60 * 1000,
+    const timer=1 * 60 * 1000
+    const { countdown, start, reset, pause, isRunning, } = useCountdownTimer({
+        timer,
     });
     const router = useRouter()
-    const [starttime, setStartTime] = useState()
+    const [startTime, setStartTime] = useState()
     const [loading, setLoading] = useState(false)
 
     const [score, setScore] = useState(0)
     const [exam, setExam] = useState([])
-
     useEffect(() => {
         setStartTime(new Date().getTime())
         start()
@@ -52,7 +53,6 @@ function Questionlist({ test }) {
                     isPresent = true
                 }
             }
-
             if (!isPresent) {
                 setExam([...exam, {
                     id: question.id,
@@ -64,8 +64,6 @@ function Questionlist({ test }) {
                     subject: question.category
                 }])
             }
-
-
         }
         else {
             toast.error('Your Time Is Over', {
@@ -82,12 +80,8 @@ function Questionlist({ test }) {
         }
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    const handleSubmit = async () => {
         setLoading(true)
-
-
-
         try {
             const response = await fetch("/api/savemarks", {
                 method: "POST",
@@ -95,7 +89,7 @@ function Questionlist({ test }) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    score, token: localStorage.getItem("token"), exam, time: new Date().toLocaleString(), start: starttime
+                    score, token: localStorage.getItem("token"), exam, time: new Date().toLocaleString(), start: startTime
 
                 }),
             })
@@ -143,15 +137,12 @@ function Questionlist({ test }) {
             });
         }
         setLoading(false)
-
     }
     return (
         <div>
-            <div className="w-full mr-10  fixed">
-                <h1 className="sm:text-3xl text-2xl  mr-10  text-right font-medium title-font  text-gray-900 mb-4 underline">
-                    {
-                        Math.floor((countdown / 1000 / 60) % 60) + ":" + Math.floor((countdown / 1000) % 60)
-                    }
+            <div className="ml-1 fixed flex justify-end">
+                <h1 className="sm:text-3xl text-2xl  mr-10  text-right font-medium title-font  text-white mb-4 underline z-10 bg-black rounded-md">
+                    <CountDown exam={exam} score={score} startTime={startTime}/>
                 </h1>
 
             </div>
@@ -170,10 +161,6 @@ function Questionlist({ test }) {
                                         return (
                                             <div div className="p-2 sm:w-1/2 w-full" key={index}>
                                                 <div className="bg-gray-100 rounded flex p-4 h-full items-center"  >
-                                                    {/* <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" className="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
-                                                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-                                                <path d="M22 4L12 14.01l-3-3"></path>
-                                            </svg> */}
                                                     <input className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 my-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name={question.id} value={question.answers[answer]} id="flexRadioDefault10" onChange={(e) => { handleChange(answer, question) }}></input>
                                                     <span span className="title-font font-medium">{question.answers[answer]}</span>
                                                 </div>
@@ -204,7 +191,7 @@ function Questionlist({ test }) {
                 </svg>
                 <span className="sr-only">Loading...</span>
             </div>}
-            <button className="flex mx-auto mb-9 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" onClick={handleSubmit}>Submit Test</button>
+            <button type='button' className="flex mx-auto mb-9 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" onClick={handleSubmit}>Submit Test</button>
         </div >
     )
 }

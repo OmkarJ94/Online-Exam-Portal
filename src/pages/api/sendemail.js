@@ -66,10 +66,7 @@ export default async function handler(req, res) {
                 Otp: code,
                 expireIn
             });
-
-
-            const response = await Code.save();
-
+            await Code.save();
             mailer(user.email, code)
             res.status(200).json({ code, expireIn })
         }

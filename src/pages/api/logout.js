@@ -3,14 +3,13 @@ import User from "../../../Models/User"
 require("../../../database/connection")
 var jwt = require('jsonwebtoken');
 var CryptoJS = require("crypto-js");
-var authenticate = require('./authentication')
+import Authenticate from './authentication'
 
 export default async function handler(req, res) {
 
     try {
         const { token } = req.body
-
-        const status = await authenticate(token)
+        const status = await Authenticate(token)
         if (status === "User Not Found") {
             res.status(500).json({ "status": "error" })
             return
@@ -27,7 +26,6 @@ export default async function handler(req, res) {
         }
     }
     catch (e) {
-
         res.status(500).json({ "status": "error" })
     }
 }

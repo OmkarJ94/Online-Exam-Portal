@@ -35,10 +35,7 @@ function Edit({ user }) {
             setTimeout(() => {
                 router.push("/login")
             }, 500)
-
         }
-
-
     }, [])
     const handleChange = (e) => {
         let name = e.target.name;
@@ -88,7 +85,7 @@ function Edit({ user }) {
                 });
                 setTimeout(() => {
 
-                    router.push("/")
+                    router.push(`/user/profile?id=${router.query.id}`)
                 }, 1000)
                 setLoading(false)
 
@@ -150,28 +147,26 @@ function Edit({ user }) {
                             <div className="p-2 w-1/2">
                                 <div className="relative">
                                     <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-                                    <input type="email" id="email" name="email" value={data.email} disabled className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                                    <input type="email" id="email" name="email" defaultValue={data.email} readOnly className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                                 </div>
                             </div>
                             <div className="p-2 w-1/2">
                                 <div className="relative">
                                     <label htmlFor="email" className="leading-7 text-sm text-gray-600">Password</label>
-                                    <input type="Password" id="Password" name="password" value={data.password} onChange={handleChange} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                                    <input type="Password" id="Password" name="password" defaultValue={data.password} readOnly className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                                 </div>
                             </div>
                             <div className="p-2 w-1/2">
                                 <div className="relative">
                                     <label htmlFor="email" className="leading-7 text-sm text-gray-600">Confirm Password</label>
-                                    <input type="Password" id="Cpassword" name="cpassword" value={data.cpassword} onChange={handleChange} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                                    <input type="Password" id="Cpassword" name="cpassword" defaultValue={data.cpassword} readOnly className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                                 </div>
                             </div>
 
                             <div className="p-2 w-1/2">
                                 <div className="relative">
-
                                     <label htmlFor="batch" className="leading-7 text-sm text-gray-600">Passing Year</label>
-
-                                    <input type="month" id="batch" name="batch" value={data.batch} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                                    <input type="month" id="batch" name="batch" value={data.batch} onChange={handleChange}  className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
 
                                 </div>
 

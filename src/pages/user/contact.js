@@ -11,6 +11,7 @@ function Contact({ user }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
+        const token = localStorage.getItem("token")
         try {
             const response = await fetch("/api/savemessage", {
                 method: "POST",
@@ -21,7 +22,7 @@ function Contact({ user }) {
                     email: user.email,
                     name: user.name,
                     message,
-                    token: router.query.token
+                    token
                 }),
             })
             if (response.status === 200) {
@@ -51,7 +52,6 @@ function Contact({ user }) {
                 });
             }
         } catch (e) {
-
             toast.error('Something Went Wrong...Please Try Again', {
                 position: "top-right",
                 autoClose: 1000,
@@ -69,7 +69,7 @@ function Contact({ user }) {
     useEffect(() => {
         const token = localStorage.getItem("token")
 
-        if (token === null || token != router.query.token) {
+        if (token === null) {
             toast.error('You Must be login', {
                 position: "top-right",
                 autoClose: 1000,
@@ -137,17 +137,17 @@ function Contact({ user }) {
 }
 
 export async function getServerSideProps(context) {
-    const { token } = context.query
+    const { id } = context.query
     
     let host = process.env.NODE_ENV === "development" ? "http" : "https"
     
-    const response = await fetch(`${host}://${context.req.headers.host}/api/getuser`, {
+    const response = await fetch(`${host}://${context.req.headers.host}/api/getuserbyid`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            token
+            id
         }),
     })
     const user = await response.json()

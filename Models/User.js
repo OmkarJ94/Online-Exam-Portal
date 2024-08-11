@@ -97,7 +97,7 @@ UsersSchema.methods.addMessage = async function (name, email, message) {
         await this.save()
         return this.messages
     } catch (error) {
-        
+        return new Error(error.message)  
     }
 }
 

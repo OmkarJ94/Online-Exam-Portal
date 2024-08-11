@@ -29,7 +29,6 @@ function Test() {
             })
             if (response.status === 200) {
                 const temp = await response.json()
-                
                 setCode({ code: temp.code, expireIn: temp.expireIn - new Date().getTime() })
                 toast.success('Code sent your email id', {
                     position: "top-right",
@@ -223,28 +222,4 @@ function Test() {
         </div>
     )
 }
-
-// export async function getServerSideProps(context) {
-//     const { token } = context.query
-
-
-//     const response = await fetch("/api/sendemail", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//             token
-//         }),
-//     })
-
-//     let code;
-//     code = await response.json()
-
-
-//     return {
-//         props: { subjectCode: code }
-//     }
-// }
-
 export default Test

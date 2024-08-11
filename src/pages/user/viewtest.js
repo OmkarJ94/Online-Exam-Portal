@@ -8,7 +8,7 @@ function Viewtest({ test }) {
     useEffect(() => {
         const token = localStorage.getItem("token")
 
-        if (token === null || token != router.query.token) {
+        if (token === null) {
             toast.error('You Must be login', {
                 position: "top-right",
                 autoClose: 1000,
@@ -109,7 +109,7 @@ function Viewtest({ test }) {
 }
 
 export async function getServerSideProps(context) {
-    const { index, token } = context.query
+    const { index, id } = context.query
 
     let host = process.env.NODE_ENV === "development" ? "http" : "https"
 
@@ -119,7 +119,7 @@ export async function getServerSideProps(context) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            token
+            id
         }),
     })
     const data = await response.json()

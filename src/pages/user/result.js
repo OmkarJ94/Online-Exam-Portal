@@ -4,7 +4,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
 function Result({ data }) {
-
     const router = useRouter()
     const { token } = router.query
     useEffect(() => {
@@ -27,8 +26,6 @@ function Result({ data }) {
             }, 500)
 
         }
-
-
     }, [router.query])
 
     return (
@@ -58,7 +55,7 @@ function Result({ data }) {
                                             <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Submission Time/Date : {item.submissiontime}</h2>
                                             <h2 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">No Of Question Solved : {item.exam.length}</h2>
 
-                                            <Link href={`viewtest?index=${index}&token=${token}`} className="text-indigo-500 inline-flex items-center">View Test
+                                            <Link href={`viewtest?index=${index}&id=${router.query.id}`} className="text-indigo-500 inline-flex items-center">View Test
                                                 <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M5 12h14"></path>
                                                     <path d="M12 5l7 7-7 7"></path>

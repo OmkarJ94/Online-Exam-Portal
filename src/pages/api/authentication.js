@@ -17,4 +17,4 @@ const Authenticate = async (token) => {
         return ("User Not Found")
     }
 }
-module.exports = Authenticate
+export default Authenticate
