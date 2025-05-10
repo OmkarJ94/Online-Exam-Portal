@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json();
   const tokenRes = await fetch(
-    "http://localhost:8080/realms/online-exam-portal/protocol/openid-connect/token",
+    `${process.env.KEYCLOAK_BASE_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/token`,
     {
       method: "POST",
       headers: {

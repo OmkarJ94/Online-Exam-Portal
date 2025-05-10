@@ -5,7 +5,5 @@ export async function logout() {
     method: "POST",
   });
 
-  console.log(res, "resss");
-
   return handleApiResponse(res);
 }
